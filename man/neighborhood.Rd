@@ -20,16 +20,21 @@ NULL.}
 An S3 class of type quant_param from the dials package.
 }
 \description{
-Number of data points used to calculate shape of the
+Number of data points used to calculate the shape of the
 neighborhood.
 }
 \details{
-Use get_p from dials to finalize.
+Use get_n or finalize from dials to finalize.
+
+If cross validation is done, use get_n_frac with argument frac set to 1/V.
+See README for detailed example.
 }
 \examples{
 library(dials)
 library(tidydann)
 
 data("taxi", package = "modeldata")
-neighborhood() |> get_p(taxi[-1])
+neighborhood() |> finalize(taxi)
+
+neighborhood() |> get_n(taxi)
 }

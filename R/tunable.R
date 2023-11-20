@@ -1,6 +1,6 @@
 #' @title Neighborhood size
 #'
-#' @description Number of data points used to calculate shape of the
+#' @description Number of data points used to calculate the shape of the
 #' neighborhood.
 #' @param range	A two-element vector holding the defaults for the smallest and
 #' largest possible values, respectively. If a transformation is specified,
@@ -10,13 +10,18 @@
 #' default is used which matches the units used in range. If no transformation,
 #' NULL.
 #' @return  An S3 class of type quant_param from the dials package.
-#' @details Use get_p from dials to finalize.
+#' @details Use get_n or finalize from dials to finalize.
+#'
+#' If cross validation is done, use get_n_frac with argument frac set to 1/V.
+#' See README for detailed example.
 #' @examples
 #' library(dials)
 #' library(tidydann)
 #'
 #' data("taxi", package = "modeldata")
-#' neighborhood() |> get_p(taxi[-1])
+#' neighborhood() |> finalize(taxi)
+#'
+#' neighborhood() |> get_n(taxi)
 #' @export
 neighborhood <- function(range = c(2L, dials::unknown()), trans = NULL) {
   dials::new_quant_param(
@@ -25,7 +30,7 @@ neighborhood <- function(range = c(2L, dials::unknown()), trans = NULL) {
     inclusive = c(TRUE, TRUE),
     trans = trans,
     label = c(neighborhood = "# Neighborhood"),
-    finalize = dials::get_p
+    finalize = dials::get_n
   )
 }
 
@@ -38,49 +43,22 @@ neighborhood <- function(range = c(2L, dials::unknown()), trans = NULL) {
 #' @examples
 #' library(tidydann)
 #'
-#' epsilon()
+#' matrix_diagonal()
 #' @export
-epsilon <- function(range = c(0, 2), trans = NULL) {
+matrix_diagonal <- function(range = c(0, 2), trans = NULL) {
   dials::new_quant_param(
     type = "double",
     range = range,
     inclusive = c(TRUE, TRUE),
     trans = trans,
-    label = c(epsilon = "# Epsilon"),
+    label = c(matrix_diagonal = "# Matrix Diagonal"),
     finalize = NULL
-  )
-}
-
-#' @title Declare tunable parameters
-#'
-#' @description Returns information on potential hyper-parameters that can be
-#' optimized.
-#'
-#' @param x A model specification of type tidy_dann
-#' specification.
-#' @param ... Other arguments passed to methods.
-#' @return A tibble with a column for the parameter name, information on the
-#' default method for generating a corresponding parameter object, the source of
-#'  the parameter  (e.g. "recipe", etc.), and the component within the source.
-#' @importFrom generics tunable
-#' @export
-tunable.tidy_dann <- function(x, ...) {
-  tibble::tibble(
-    name = c("neighbors", "neighborhood", "epsilon"),
-    call_info = list(
-      list(pkg = "dials", fun = "neighbors"),
-      list(pkg = "tidydann", fun = "neighborhood"),
-      list(pkg = "tidydann", fun = "epsilon")
-    ),
-    source = "model_spec",
-    component = "tidy_dann",
-    component_id = "main"
   )
 }
 
 #' @title Weighted argument to ncoord
 #'
-#' @param values A two-element vector containing FALSE and TRUE.
+#' @param values A one-element vector containing FALSE or TRUE.
 #' @return  An S3 class of type qual_param from the dials package.
 #' @examples
 #' library(tidydann)
@@ -97,8 +75,8 @@ weighted <- function(values = c(FALSE, TRUE)) {
 
 #' @title Sphere argument to ncoord
 #'
-#' @param values A four-element vector containing "mcd", "mve", "classical",
-#' and "none".
+#' @param values A one-element vector containing "mcd", "mve", "classical",
+#' or "none".
 #' @return  An S3 class of type qual_param from the dials package.
 #' @examples
 #' library(tidydann)
@@ -118,7 +96,7 @@ sphere <- function(values = c("mcd", "mve", "classical", "none")) {
 #' @description Returns information on potential hyper-parameters that can be
 #' optimized.
 #'
-#' @param x A model specification of type tidy_sub_dann
+#' @param x A model specification of type nearest_neighbor_adaptive
 #' specification.
 #' @param ... Other arguments passed to methods.
 #' @return A tibble with a column for the parameter name, information on the
@@ -126,22 +104,22 @@ sphere <- function(values = c("mcd", "mve", "classical", "none")) {
 #' the parameter (e.g. "recipe", etc.), and the component within the source.
 #' @importFrom generics tunable
 #' @export
-tunable.tidy_sub_dann <- function(x, ...) {
+tunable.nearest_neighbor_adaptive <- function(x, ...) {
   tibble::tibble(
     name = c(
-      "neighbors", "neighborhood", "epsilon",
+      "neighbors", "neighborhood", "matrix_diagonal",
       "weighted", "sphere", "num_comp"
     ),
     call_info = list(
       list(pkg = "dials", fun = "neighbors"),
       list(pkg = "tidydann", fun = "neighborhood"),
-      list(pkg = "tidydann", fun = "epsilon"),
+      list(pkg = "tidydann", fun = "matrix_diagonal"),
       list(pkg = "tidydann", fun = "weighted"),
       list(pkg = "tidydann", fun = "sphere"),
       list(pkg = "dials", fun = "num_comp")
     ),
     source = "model_spec",
-    component = "tidy_sub_dann",
+    component = "nearest_neighbor_adaptive",
     component_id = "main"
   )
 }
