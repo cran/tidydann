@@ -1,7 +1,7 @@
 Package: tidydann
 Title: Add the 'dann' Model and the 'sub_dann' Model to the Tidymodels
         Ecosystem
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person("Greg", "McMahan", , "gmcmacran@gmail.com", role = c("aut", "cre"))
 Description: Provides model specifications, tuning parameters for models in 
@@ -9,15 +9,18 @@ Description: Provides model specifications, tuning parameters for models in
     <https://web.stanford.edu/~hastie/Papers/dann_IEEE.pdf>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
+Depends: R (>= 4.1.0)
 Suggests: testthat (>= 3.0.0), dann (>= 1.0.0), recipes, mlbench,
         modeldata, workflows, rsample, dplyr, magrittr, tune, scales,
         yardstick, rlang
 Config/testthat/edition: 3
 Imports: dials, generics, tibble, parsnip
+URL: https://github.com/gmcmacran/tidydann
+BugReports: https://github.com/gmcmacran/tidydann/issues
 NeedsCompilation: no
-Packaged: 2023-11-20 03:52:13 UTC; gmcma
+Packaged: 2025-04-12 20:34:52 UTC; ixi_eulogy_ixi
 Author: Greg McMahan [aut, cre]
 Maintainer: Greg McMahan <gmcmacran@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-11-20 08:30:02 UTC
+Date/Publication: 2025-04-12 21:00:02 UTC
